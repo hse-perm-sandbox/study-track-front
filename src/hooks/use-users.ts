@@ -22,21 +22,40 @@ export const useUsers = () => {
     loadUsers();
   }, []);
 
+  const reloadUsers = async () => {
+    try {
+      const data = await fetchUsers();
+      setUsers(data);
+    } catch (err) {
+      setError('Failed to reload users');
+    }
+  };
+
   const addUser = async (user: Omit<User, 'id'>) => {
-    const newUser = await createUser(user);
-    setUsers((prev) => [...prev, newUser]);
+    try {
+      await createUser(user);
+      await reloadUsers(); // Повторная загрузка списка пользователей
+    } catch (err) {
+      setError('Failed to add user');
+    }
   };
 
   const removeUser = async (id: number) => {
-    await deleteUser(id);
-    setUsers((prev) => prev.filter((user) => user.id !== id));
+    try {
+      await deleteUser(id);
+      await reloadUsers(); // Повторная загрузка списка пользователей
+    } catch (err) {
+      setError('Failed to delete user');
+    }
   };
 
   const editUser = async (id: number, updatedUser: Partial<User>) => {
-    const user = await updateUser(id, updatedUser);
-    setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, ...user } : u))
-    );
+    try {
+      await updateUser(id, updatedUser);
+      await reloadUsers(); // Повторная загрузка списка пользователей
+    } catch (err) {
+      setError('Failed to update user');
+    }
   };
 
   return { users, loading, error, addUser, removeUser, editUser };
