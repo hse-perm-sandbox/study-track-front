@@ -1,21 +1,21 @@
 import React from 'react';
-import UserList from './components/user-list';
-import UserForm from './components/user-form';
-import { useUsers } from './hooks/use-users';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/home';
+import UsersPage from './pages/users';
 
 const App: React.FC = () => {
-  const users = useUsers();
   return (
-    <div>
-      <h1>User Management</h1>
-      <UserForm addUser={users.addUser}/>
-      <UserList 
-        users={users.users} 
-        loading={users.loading} 
-        error={users.error} 
-        removeUser={users.removeUser} 
-      />
-    </div>
+    <BrowserRouter>
+      <nav style={{ padding: '10px', background: '#f0f0f0' }}>
+        <Link to="/" style={{ marginRight: '10px' }}>Главная</Link>
+        <Link to="/users">Пользователи</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/users" element={<UsersPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
