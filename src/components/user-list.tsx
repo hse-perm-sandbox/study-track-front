@@ -1,5 +1,6 @@
 import React from 'react';
 import { User } from '../types/user.interface';
+import './user-list.css';
 
 interface UserListProps {
   users: User[];
@@ -9,15 +10,23 @@ interface UserListProps {
 }
 
 const UserList: React.FC<UserListProps> = ({ users, loading, error, removeUser }) => {
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p className="loading-message">Loading users...</p>;
+  if (error) return <p className="error-message">{error}</p>;
 
   return (
-    <ul>
+    <ul className="user-list">
       {users.map((user) => (
-        <li key={user.id}>
-          {user.name} ({user.age} years old)
-          <button onClick={() => removeUser(user.id)}>Delete</button>
+        <li key={user.id} className="user-item">
+          <div className="user-info">
+            <div className="user-name">{user.name}</div>
+            <div className="user-age">{user.age} years old</div>
+          </div>
+          <button 
+            className="delete-btn"
+            onClick={() => removeUser(user.id)}
+          >
+            Delete
+          </button>
         </li>
       ))}
     </ul>

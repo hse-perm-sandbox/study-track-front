@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import UserForm from '../components/user-form';
 import UserList from '../components/user-list';
 import { useUsers } from '../hooks/use-users';
+import './users.css';
 
 const UsersPage: React.FC = () => {
   const users = useUsers();
   return (
-    <div>
+    <div className="page-container users-container">
       <h1>Управление пользователями</h1>
       <Link to="/">
         <button>На главную</button>
