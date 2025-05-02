@@ -1,9 +1,14 @@
 import React from 'react';
-import { useUsers } from '../hooks/use-users';
+import { User } from '../types/user.interface';
 
-const UserList: React.FC = () => {
-  const { users, loading, error, removeUser } = useUsers();
+interface UserListProps {
+  users: User[];
+  loading: boolean;
+  error: string | null;
+  removeUser: (id: number) => Promise<void>;
+}
 
+const UserList: React.FC<UserListProps> = ({ users, loading, error, removeUser }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 

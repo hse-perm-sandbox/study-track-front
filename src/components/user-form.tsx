@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { useUsers } from '../hooks/use-users';
+import { User } from '../types/user.interface';
 
-const UserForm: React.FC = () => {
-  const { addUser } = useUsers();
+interface UserFormProps {
+  addUser: (user: Omit<User, 'id'>) => Promise<void>;
+}
+
+const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState<number | ''>('');
 
@@ -27,7 +30,7 @@ const UserForm: React.FC = () => {
         type="number"
         placeholder="Age"
         value={age}
-        onChange={(e) => setAge(Number(e.target.value))}
+        onChange={(e) => setAge(e.target.value === '' ? '' : Number(e.target.value))}
       />
       <button type="submit">Add User</button>
     </form>
