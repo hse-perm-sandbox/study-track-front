@@ -95,16 +95,22 @@ Study Track — web-приложение, ориентированное на с
 src/
 ├── components/       # Компоненты приложения
 │   ├── UserForm.tsx  # Форма добавления пользователя
-│   └── UserList.tsx  # Список пользователей
+│   └── UserList.tsx  # Список пользователей|
+|   ├── TaskForm.tsx  # форма создания задачи
+│   └── TaskCard.tsx  # карточка одной задачи
 ├── hooks/
 │   └── useUsers.ts   # Кастомный хук для работы с пользователями
 ├── pages/            # Страницы приложения
 │   ├── Home.tsx      # Главная страница
-│   └── UsersPage.tsx # Страница управления пользователями
+│   ├── UsersPage.tsx # Страница управления пользователями
+│   ├── TasksPage.tsx # список задач
+│   └── TaskDetailPage.tsx # подробности одной задачи
 ├── services/         # Работа с API
 │   ├── api-client.ts # Настройка HTTP-клиента
+│   ├── tasks-api.ts # API для работы с задачами
 │   └── users-api.ts  # API для работы с пользователями
 ├── types/            # Типы TypeScript
+│   ├── task.interface.ts # описание типа Task
 │   └── user.interface.ts # Интерфейс пользователя
 ├── App.tsx           # Главный компонент приложения
 └── main.tsx          # Точка входа
