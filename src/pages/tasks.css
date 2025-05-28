@@ -1,0 +1,31 @@
+.tasks-container {
+  padding: 1rem;
+}
+
+.tasks-container h1 {
+  color: #646cff;
+  margin-bottom: 1.5rem;
+}
+
+.tasks-container button {
+  background-color: #646cff;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s;
+}
+
+.tasks-container button:hover {
+  background-color: #535bf2;
+}
+
+.task-item {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+}
