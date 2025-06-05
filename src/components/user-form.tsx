@@ -8,18 +8,23 @@ interface UserFormProps {
 
 const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
   const [name, setName] = useState('');
-  const [age, setAge] = useState<number | ''>('');
+  const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !age) return;
+    if (!name || !email) return;
 
     setIsSubmitting(true);
     try {
-      await addUser({ name, age: Number(age) });
+      await addUser({
+        name, email,
+        password_hash: '',
+        created_at: new Date,
+        updated_at: new Date
+      });
       setName('');
-      setAge('');
+      setEmail('');
     } finally {
       setIsSubmitting(false);
     }
@@ -42,14 +47,14 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
       </div>
       
       <div className="form-group">
-        <label htmlFor="age">Age</label>
+        <label htmlFor="email">Email</label>
         <input
-          id="age"
-          type="number"
+          id="email"
+          type="string"
           className="form-control"
-          placeholder="Enter age"
-          value={age}
-          onChange={(e) => setAge(e.target.value === '' ? '' : Number(e.target.value))}
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           disabled={isSubmitting}
           min="1"
           aria-label="User age"
@@ -59,7 +64,7 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
       <button 
         type="submit" 
         className="submit-btn"
-        disabled={!name || !age || isSubmitting}
+        disabled={!name || !email || isSubmitting}
         aria-label="Add user"
       >
         {isSubmitting ? 'Adding...' : 'Add User'}

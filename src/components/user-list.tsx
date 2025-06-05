@@ -19,7 +19,7 @@ const UserList: React.FC<UserListProps> = ({ users, loading, error, removeUser }
         <li key={user.id} className="user-item">
           <div className="user-info">
             <div className="user-name">{user.name}</div>
-            <div className="user-age">{user.age} years old</div>
+            <div className="user-email">{user.email}</div>
           </div>
           <button 
             className="delete-btn"
