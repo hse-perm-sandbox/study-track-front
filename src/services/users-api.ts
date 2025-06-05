@@ -8,7 +8,11 @@ export const fetchUsers = async (): Promise<User[]> => {
 };
 
 // Добавить нового пользователя
-export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
+export const createUser = async (user: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<User> => {
   const response = await apiClient.post('/users', user);
   return response.data;
 };

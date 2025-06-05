@@ -1,30 +1,26 @@
 import React, { useState } from 'react';
-import { User } from '../types/user.interface';
 import './user-form.css';
 
 interface UserFormProps {
-  addUser: (user: Omit<User, 'id'>) => Promise<void>;
+  addUser: (user: { name: string; email: string; password: string }) => Promise<void>;
 }
 
 const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email) return;
+    if (!name || !email || !password) return;
 
     setIsSubmitting(true);
     try {
-      await addUser({
-        name, email,
-        password_hash: '',
-        created_at: new Date,
-        updated_at: new Date
-      });
+      await addUser({ name, email, password });
       setName('');
       setEmail('');
+      setPassword('');
     } finally {
       setIsSubmitting(false);
     }
@@ -42,30 +38,39 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isSubmitting}
-          aria-label="User name"
         />
       </div>
-      
+
       <div className="form-group">
         <label htmlFor="email">Email</label>
         <input
           id="email"
-          type="string"
+          type="email"
           className="form-control"
           placeholder="Enter email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isSubmitting}
-          min="1"
-          aria-label="User age"
         />
       </div>
 
-      <button 
-        type="submit" 
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          className="form-control"
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isSubmitting}
+        />
+      </div>
+
+      <button
+        type="submit"
         className="submit-btn"
-        disabled={!name || !email || isSubmitting}
-        aria-label="Add user"
+        disabled={!name || !email || !password || isSubmitting}
       >
         {isSubmitting ? 'Adding...' : 'Add User'}
       </button>
