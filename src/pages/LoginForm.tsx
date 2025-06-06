@@ -13,8 +13,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   setError("");
 
   try {
-    const data = await login(email, password);
-    localStorage.setItem("token", data.token);
+    await login(email, password);
     navigate("/tasks");
   } catch {
     setError("Неверный логин или пароль");

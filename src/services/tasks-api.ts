@@ -2,8 +2,8 @@ import apiClient from './api-client';
 import { Task } from '../types/task.interface';
 
 // Получить список задач
-export const fetchTasks = async (): Promise<Task[]> => {
-  const response = await apiClient.get('/tasks');
+export const fetchTasks = async (user_id: number): Promise<Task[]> => {
+  const response = await apiClient.get(`users/${user_id}/tasks/`);
   return response.data;
 };
 
