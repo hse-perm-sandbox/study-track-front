@@ -1,25 +1,27 @@
 import apiClient from './api-client';
 import { Task } from '../types/task.interface';
 
-// Получить список задач
-export const fetchTasks = async (user_id: number): Promise<Task[]> => {
-  const response = await apiClient.get(`users/${user_id}/tasks/`);
+// Получить список задач текущего пользователя (userId внутри токена)
+export const fetchTasks = async (): Promise<Task[]> => {
+  const response = await apiClient.get('/tasks/');
   return response.data;
 };
 
-// Добавить новую задачу
-export const createTask = async (task: Omit<Task, 'id'>): Promise<Task> => {
-  const response = await apiClient.post('/tasks', task);
+export const createTask = async (
+  task: Omit<Task, 'id' | 'user_id'>
+): Promise<Task> => {
+  const response = await apiClient.post('/tasks/', task);
   return response.data;
 };
 
-// Удалить задачу
-export const deleteTask = async (id: number): Promise<void> => {
-  await apiClient.delete(`/tasks/${id}`);
+export const deleteTask = async (taskId: number): Promise<void> => {
+  await apiClient.delete(`/tasks/${taskId}`);
 };
 
-// Обновить данные задачи
-export const updateTask = async (id: number, task: Partial<Task>): Promise<Task> => {
+export const updateTask = async (
+  id: number,
+  task: Partial<Task>
+): Promise<Task> => {
   const response = await apiClient.patch(`/tasks/${id}`, task);
   return response.data;
 };

@@ -1,23 +1,17 @@
-import { useState, useEffect } from 'react';
-import { fetchTasks, createTask, deleteTask } from '../services/tasks-api';
+import { useEffect, useState } from 'react';
 import { Task } from '../types/task.interface';
-import AuthService from '../services/auth-service';
-import { User } from '../types/user.interface';
+import { fetchTasks, createTask, deleteTask, updateTask} from '../services/tasks-api';
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadTasks = async () => {
     try {
-      const currentUser: User | null = AuthService.getUserInfo();
-      if (!currentUser){
-        throw new Error('Current user is not set');
-      }
-      const data = await fetchTasks(currentUser.id);
+      const data = await fetchTasks(); 
       setTasks(data);
-    } catch {
+    } catch (err) {
       setError('Ошибка загрузки задач');
     } finally {
       setLoading(false);
@@ -28,23 +22,35 @@ export const useTasks = () => {
     loadTasks();
   }, []);
 
-  const addTask = async (task: Omit<Task, 'id'>) => {
+  const addTask = async (task: Omit<Task, 'id' | 'user_id'>) => {
     try {
-      await createTask(task);
-      await loadTasks();
+      const newTask = await createTask(task); 
+      setTasks((prev) => [...prev, newTask]);
     } catch {
-      setError('Ошибка добавления задачи');
+      setError('Ошибка при добавлении задачи');
     }
   };
 
   const removeTask = async (id: number) => {
     try {
       await deleteTask(id);
-      await loadTasks();
+      setTasks((prev) => prev.filter((t) => t.id !== id));
     } catch {
-      setError('Ошибка удаления задачи');
+      setError('Ошибка при удалении задачи');
     }
   };
 
-  return { tasks, loading, error, addTask, removeTask };
+  const editTask = async (id: number, updated: Partial<Task>) => {
+  try {
+    const updatedTask = await updateTask(id, updated);
+    setTasks((prev) => prev.map((t) => t.id === id ? updatedTask : t));
+  } catch {
+    setError('Ошибка при обновлении задачи');
+  }
+  };
+
+  return { tasks, loading, error, addTask, removeTask, editTask };
+
+
+
 };
