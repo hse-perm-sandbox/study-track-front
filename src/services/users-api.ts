@@ -1,6 +1,6 @@
 import apiClient from './api-client';
 import { User } from '../types/user.interface';
-
+import { CreateUserInput } from '../types/user.interface';
 // Получить список пользователей
 export const fetchUsers = async (): Promise<User[]> => {
   const response = await apiClient.get('/users');
@@ -8,11 +8,7 @@ export const fetchUsers = async (): Promise<User[]> => {
 };
 
 // Добавить нового пользователя
-export const createUser = async (user: {
-  name: string;
-  email: string;
-  password: string;
-}): Promise<User> => {
+export const createUser = async (user: CreateUserInput): Promise<User> => {
   const response = await apiClient.post('/users', user);
   return response.data;
 };

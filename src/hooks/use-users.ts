@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchUsers, createUser, deleteUser, updateUser } from '../services/users-api';
 import { User } from '../types/user.interface';
-
+import { CreateUserInput } from '../types/user.interface';
 export const useUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,14 +31,14 @@ export const useUsers = () => {
     }
   };
 
-  const addUser = async (user: Omit<User, 'id'>) => {
-    try {
-      await createUser(user);
-      await reloadUsers(); // Повторная загрузка списка пользователей
-    } catch (err) {
-      setError('Failed to add user');
-    }
-  };
+  const addUser = async (user: CreateUserInput) => {
+  try {
+    await createUser(user);
+    await reloadUsers();
+  } catch (err) {
+    setError('Failed to add user');
+  }
+};
 
   const removeUser = async (id: number) => {
     try {
