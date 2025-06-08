@@ -50,7 +50,4 @@ export const useTasks = () => {
   };
 
   return { tasks, loading, error, addTask, removeTask, editTask };
-
-
-
 };

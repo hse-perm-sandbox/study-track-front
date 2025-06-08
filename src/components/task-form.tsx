@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Task } from '../types/task.interface';
 import './task-form.css';
+import AuthService from '../services/auth-service';
+import { useCategories } from '../hooks/use-categories';
+import { Category } from '../types/category.interface';
 
 interface TaskFormProps {
-  addTask: (task: Omit<Task, 'id'>) => Promise<void>;
+  addTask: (task: Omit<Task, 'id' | 'user_id'>) => Promise<void>;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
@@ -11,13 +14,20 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('low');
   const [deadline, setDeadline] = useState('');
+  const [categoryId, setCategoryId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userId, setUserId] = useState(1); // временно
-  const [categoryId, setCategoryId] = useState(1); // временно
+
+  const { categories, error: categoriesError } = useCategories();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !description || !deadline) return;
+    if (!title || !description || !deadline || !categoryId) return;
+
+    const user = AuthService.getUserInfo();
+    if (!user?.user_id) {
+      console.error('Пользователь не авторизован');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -26,13 +36,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
         description,
         priority,
         deadline,
-        user_id: userId,
         category_id: categoryId,
-        });
+      });
       setTitle('');
       setDescription('');
       setPriority('low');
       setDeadline('');
+      setCategoryId(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -92,11 +102,26 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
         />
       </div>
 
-      <button
-        type="submit"
-        className="submit-btn"
-        disabled={isSubmitting}
-      >
+      <div className="form-group">
+        <label htmlFor="category">Категория</label>
+        <select
+          id="category"
+          className="form-control"
+          value={categoryId ?? ''}
+          onChange={(e) => setCategoryId(Number(e.target.value))}
+          required
+        >
+          <option value="">Выберите категорию</option>
+          {categories.map((category: Category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+        {categoriesError && <p className="error">{categoriesError}</p>}
+      </div>
+
+      <button type="submit" className="submit-btn" disabled={isSubmitting}>
         {isSubmitting ? 'Добавление...' : 'Добавить задачу'}
       </button>
     </form>
