@@ -1,9 +1,17 @@
 import apiClient from './api-client';
+import AuthService from './auth-service';
 import { Category } from '../types/category.interface';
 
 // Получить список всех категорий текущего пользователя
 export const fetchCategories = async (): Promise<Category[]> => {
-  const response = await apiClient.get('/categories/');
+  const user = AuthService.getUserInfo(); // Получаем данные пользователя
+  if (!user?.user_id) {
+    throw new Error('Пользователь не авторизован');
+  }
+
+  const response = await apiClient.get('/categories/', {
+    params: { user_id: user.user_id }, // Передаём user_id в запрос
+  });
   return response.data;
 };
 
@@ -11,7 +19,15 @@ export const fetchCategories = async (): Promise<Category[]> => {
 export const createCategory = async (
   category: Omit<Category, 'id'>
 ): Promise<Category> => {
-  const response = await apiClient.post('/categories/', category);
+  const user = AuthService.getUserInfo();
+  if (!user?.user_id) {
+    throw new Error('Пользователь не авторизован');
+  }
+
+  const response = await apiClient.post('/categories/', {
+    ...category,
+    user_id: user.user_id, // Добавляем user_id к данным категории
+  });
   return response.data;
 };
 
