@@ -8,7 +8,7 @@ const Home: React.FC = () => {
       <h1>Добро пожаловать!</h1>
       <p>Это главная страница приложения.</p>
       <Link to="/users">
-        <button>Управление пользователями</button>
+        <button>Регистрация</button>
       </Link>
       <Link to="/tasks">
         <button>Управление задачами</button>

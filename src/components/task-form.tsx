@@ -9,31 +9,40 @@ interface TaskFormProps {
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
-  // Состояния формы
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('low');
   const [deadline, setDeadline] = useState('');
+  const [displayDeadline, setDisplayDeadline] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Получаем категории
   const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
 
   const handleDeadlineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
-    if (value) {
-      const year = new Date(value).getFullYear();
-      if (year < 1000 || year > 9999) {
-        setFormError('Год должен состоять из 4 цифр');
-        return;
-      }
+    let formattedValue = value;
+
+    // Автоматическое добавление разделителей
+    if (value.length === 2 || value.length === 5) {
+      formattedValue = value + '-';
     }
-    
-    setDeadline(value);
-    setFormError(null);
+
+    // Ограничение длины и разрешение только цифр и дефисов
+    if (value.length <= 10 && /^[\d-]*$/.test(value)) {
+      setDisplayDeadline(formattedValue);
+      
+      // Преобразование в формат ГГГГ-ММ-ДД при полной дате
+      if (value.length === 10) {
+        const [day, month, year] = value.split('-');
+        if (day && month && year) {
+          setDeadline(`${year}-${month}-${day}`);
+          return;
+        }
+      }
+      setDeadline('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,18 +53,20 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
       setFormError('Введите название задачи');
       return;
     }
+
     if (!deadline) {
-      setFormError('Укажите срок выполнения');
-      return;
-    }
-    if (!categoryId) {
-      setFormError('Выберите категорию');
+      setFormError('Укажите корректный срок выполнения (ДД-ММ-ГГГГ)');
       return;
     }
 
     const user = AuthService.getUserInfo();
     if (!user?.user_id) {
       setFormError('Пользователь не авторизован');
+      return;
+    }
+
+    if (!categoryId) {
+      setFormError('Выберите категорию');
       return;
     }
 
@@ -68,9 +79,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
         deadline,
         category_id: categoryId,
       });
+      
+      // Сброс формы
       setTitle('');
       setDescription('');
       setPriority('low');
+      setDisplayDeadline('');
       setDeadline('');
       setCategoryId(null);
     } catch (error) {
@@ -96,7 +110,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           placeholder="Введите название задачи"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          maxLength={100}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -109,7 +123,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          maxLength={500}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -120,6 +134,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           className="form-control"
           value={priority}
           onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+          disabled={isSubmitting}
         >
           <option value="low">Низкий</option>
           <option value="medium">Средний</option>
@@ -128,17 +143,17 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="deadline">Срок выполнения *</label>
+        <label htmlFor="deadline">Срок выполнения * (ДД-ММ-ГГГГ)</label>
         <input
           id="deadline"
-          type="date"
+          type="text"
           className="form-control"
-          value={deadline}
+          placeholder="ДД-ММ-ГГГГ"
+          value={displayDeadline}
           onChange={handleDeadlineChange}
-          min={new Date().toISOString().split('T')[0]}
-          max="2100-12-31"
+          maxLength={10}
+          disabled={isSubmitting}
         />
-        <small className="text-muted">Формат: ГГГГ-ММ-ДД</small>
       </div>
 
       <div className="form-group">
@@ -152,7 +167,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
               className="form-control"
               value={categoryId ?? ''}
               onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : null)}
-              disabled={isCategoriesDisabled}
+              disabled={isSubmitting || isCategoriesDisabled}
             >
               <option value="">Выберите категорию</option>
               {categories.map((category) => (

@@ -29,12 +29,12 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
   return (
     <form className="user-form" onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="name">Name</label>
+        <label htmlFor="name">Имя</label>
         <input
           id="name"
           type="text"
           className="form-control"
-          placeholder="Enter name"
+          placeholder="Введите имя"
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isSubmitting}
@@ -47,7 +47,7 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
           id="email"
           type="email"
           className="form-control"
-          placeholder="Enter email"
+          placeholder="Введите email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isSubmitting}
@@ -55,12 +55,12 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Пароль</label>
         <input
           id="password"
           type="password"
           className="form-control"
-          placeholder="Enter password"
+          placeholder="Введите пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isSubmitting}
@@ -72,7 +72,7 @@ const UserForm: React.FC<UserFormProps> = ({ addUser }) => {
         className="submit-btn"
         disabled={!name || !email || !password || isSubmitting}
       >
-        {isSubmitting ? 'Adding...' : 'Add User'}
+        {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
       </button>
     </form>
   );

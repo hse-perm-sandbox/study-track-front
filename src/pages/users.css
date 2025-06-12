@@ -1,10 +1,13 @@
 .users-container {
     padding: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
   }
   
   .users-container h1 {
     color: #646cff;
     margin-bottom: 1.5rem;
+    text-align: center;
   }
   
   .users-container button {
