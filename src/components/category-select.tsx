@@ -1,34 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCategories } from '../hooks/use-categories';
+import AuthService from '../services/auth-service';
 import './category-select.css';
 
-interface CategorySelectProps {
-  selectedCategory: number | null;
-  onSelect: (id: number) => void;
-}
+const CategoryManager: React.FC = () => {
+  const {
+    categories,
+    loading,
+    error,
+    addCategory,
+    removeCategory,
+  } = useCategories();
 
-const CategorySelect: React.FC<CategorySelectProps> = ({ selectedCategory, onSelect }) => {
-  const { categories, loading, error } = useCategories();
+  const [newCategory, setNewCategory] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
 
-  if (loading) return <p>Загрузка категорий...</p>;
-  if (error) return <p>{error}</p>;
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddError(null);
+
+    const name = newCategory.trim();
+    if (!name) {
+      setAddError('Название не может быть пустым');
+      return;
+    }
+
+    const user = AuthService.getUserInfo();
+    if (!user?.user_id) {
+      setAddError('Пользователь не авторизован');
+      return;
+    }
+
+    setAdding(true);
+    try {
+      await addCategory({ name, user_id: user.user_id });
+      setNewCategory('');
+    } catch {
+      setAddError('Ошибка при добавлении категории');
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const handleRemoveCategory = async (id: number) => {
+    if (window.confirm('Удалить категорию?')) {
+      await removeCategory(id);
+    }
+  };
 
   return (
-    <div className="category-select">
-      <label>Категория</label>
-      <select
-        value={selectedCategory || ''}
-        onChange={(e) => onSelect(Number(e.target.value))}
-      >
-        <option value="">Выберите категорию</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
+    <div className="category-manager">
+      <h3>Категории</h3>
+      {error && <div className="error">{error}</div>}
+
+      <ul className="category-list">
+        {loading ? (
+          <li>Загрузка...</li>
+        ) : (
+          categories.map((cat) => (
+            <li key={cat.id} className="category-item">
+              {cat.name}
+              <button
+                className="remove-btn"
+                onClick={() => handleRemoveCategory(cat.id)}
+                disabled={adding}
+                title="Удалить категорию"
+              >
+                ✕
+              </button>
+            </li>
+          ))
+        )}
+      </ul>
+
+      <form className="add-category-form" onSubmit={handleAddCategory}>
+        <input
+          type="text"
+          value={newCategory}
+          onChange={(e) => setNewCategory(e.target.value)}
+          placeholder="Новая категория"
+          disabled={adding}
+        />
+        <button type="submit" disabled={adding}>
+          {adding ? 'Добавление...' : 'Добавить'}
+        </button>
+      </form>
+      {addError && <div className="error">{addError}</div>}
     </div>
   );
 };
 
-export default CategorySelect;
+export default CategoryManager;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Category } from '../types/category.interface';
-import { fetchCategories, createCategory, updateCategory, deleteCategory } from '../services/categories-api';
+import { fetchCategories, createCategory, updateCategory, deleteCategory,} from '../services/categories-api';
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -24,8 +24,8 @@ export const useCategories = () => {
 
   const addCategory = async (category: Omit<Category, 'id'>) => {
     try {
-      const newCategory = await createCategory(category);
-      setCategories((prev) => [...prev, newCategory]);
+      await createCategory(category);
+      await loadCategories(); // ⬅ обновление списка после добавления
     } catch {
       setError('Ошибка при добавлении категории');
     }

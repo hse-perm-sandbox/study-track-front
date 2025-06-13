@@ -16,7 +16,7 @@ const UserList: React.FC<UserListProps> = ({ users, loading, error, removeUser }
   return (
     <ul className="user-list">
       {users.map((user) => (
-        <li key={user.id} className="user-item">
+        <li key={user.user_id} className="user-item">
           <div className="user-info">
           <div className="user-name">{user.name}</div>
           <div className="user-age">{user.email}</div>
@@ -24,7 +24,7 @@ const UserList: React.FC<UserListProps> = ({ users, loading, error, removeUser }
           </div>
           <button 
             className="delete-btn"
-            onClick={() => removeUser(user.id)}
+            onClick={() => removeUser(user.user_id)}
           >
             Delete
           </button>

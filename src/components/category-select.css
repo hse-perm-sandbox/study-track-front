@@ -1,0 +1,108 @@
+.category-manager {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-manager h3 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.category-list {
+  list-style: none;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f7f7fa;
+  border-radius: 4px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+  color: #333;
+  box-shadow: 0 1px 2px rgba(100, 108, 255, 0.02);
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff5555;
+  font-size: 1.1rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.remove-btn:hover {
+  background: #ffeaea;
+  color: #d80000;
+}
+
+.add-category-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.add-category-form input[type="text"] {
+  flex: 1;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+  background: #fafaff;
+  color: #333;
+}
+
+.add-category-form input[type="text"]:focus {
+  border-color: #646cff;
+  outline: none;
+}
+
+.add-category-form button {
+  padding: 0.7rem 1.1rem;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-category-form button:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.add-category-form button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.error, .form-error {
+  margin-top: 0.6rem;
+  color: #d80000;
+  font-size: 0.96rem;
+  text-align: center;
+}
+
+.info {
+  color: #888;
+  font-size: 0.96rem;
+  text-align: center;
+  margin-top: 0.6rem;
+}

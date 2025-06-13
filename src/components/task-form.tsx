@@ -3,6 +3,7 @@ import { Task } from '../types/task.interface';
 import './task-form.css';
 import AuthService from '../services/auth-service';
 import { useCategories } from '../hooks/use-categories';
+import CategoryManager from './category-select';
 
 interface TaskFormProps {
   addTask: (task: Omit<Task, 'id' | 'user_id'>) => Promise<void>;
@@ -162,27 +163,28 @@ const TaskForm: React.FC<TaskFormProps> = ({ addTask }) => {
           <div className="loading">Загрузка категорий...</div>
         ) : (
           <>
-            <select
-              id="category"
-              className="form-control"
-              value={categoryId ?? ''}
-              onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : null)}
-              disabled={isSubmitting || isCategoriesDisabled}
-            >
-              <option value="">Выберите категорию</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            {categoriesError && <div className="error">{categoriesError}</div>}
-            {categories.length === 0 && !categoriesError && (
-              <div className="info">Нет доступных категорий</div>
-            )}
-          </>
-        )}
-      </div>
+             <select
+        id="category"
+        className="form-control"
+        value={categoryId ?? ''}
+        onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : null)}
+        disabled={isSubmitting || isCategoriesDisabled}
+      >
+        <option value="">Выберите категорию</option>
+        {categories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+      {categoriesError && <div className="error">{categoriesError}</div>}
+      {categories.length === 0 && !categoriesError && (
+        <div className="info">Нет доступных категорий</div>
+      )}
+      <CategoryManager />
+    </>
+  )}
+</div>
 
       <button 
         type="submit" 
