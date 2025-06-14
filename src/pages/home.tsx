@@ -10,8 +10,8 @@ const Home: React.FC = () => {
       <Link to="/users">
         <button>Регистрация</button>
       </Link>
-      <Link to="/tasks">
-        <button>Управление задачами</button>
+      <Link to="/login">
+        <button>Вход</button>
       </Link>
     </div>
   );

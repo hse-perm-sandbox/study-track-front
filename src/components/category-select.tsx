@@ -74,7 +74,7 @@ const CategoryManager: React.FC = () => {
         )}
       </ul>
 
-      <form className="add-category-form" onSubmit={handleAddCategory}>
+      <div className="add-category-form">
         <input
           type="text"
           value={newCategory}
@@ -82,10 +82,15 @@ const CategoryManager: React.FC = () => {
           placeholder="Новая категория"
           disabled={adding}
         />
-        <button type="submit" disabled={adding}>
+        <button
+          type="button" // ВАЖНО: НЕ submit
+          onClick={handleAddCategory}
+          disabled={adding}
+        >
           {adding ? 'Добавление...' : 'Добавить'}
         </button>
-      </form>
+      </div>
+
       {addError && <div className="error">{addError}</div>}
     </div>
   );

@@ -26,7 +26,7 @@ export const createCategory = async (
 
   const response = await apiClient.post('/categories/', {
     ...category,
-    user_id: user.user_id, // Добавляем user_id к данным категории
+    user_id: user.user_id, 
   });
   return response.data;
 };

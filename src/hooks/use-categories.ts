@@ -25,7 +25,7 @@ export const useCategories = () => {
   const addCategory = async (category: Omit<Category, 'id'>) => {
     try {
       await createCategory(category);
-      await loadCategories(); // ⬅ обновление списка после добавления
+      await loadCategories(); 
     } catch {
       setError('Ошибка при добавлении категории');
     }
@@ -48,6 +48,7 @@ export const useCategories = () => {
   const removeCategory = async (id: number) => {
     try {
       await deleteCategory(id);
+      await loadCategories();
       setCategories((prev) => prev.filter((c) => c.id !== id));
     } catch {
       setError('Ошибка при удалении категории');
@@ -61,5 +62,6 @@ export const useCategories = () => {
     addCategory,
     editCategory,
     removeCategory,
+    loadCategories
   };
 };
