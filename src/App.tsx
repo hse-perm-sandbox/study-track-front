@@ -11,8 +11,8 @@ const App: React.FC = () => {
     <BrowserRouter>
       <nav style={{ padding: '10px', background: '#f0f0f0' }}>
         <Link to="/" style={{ marginRight: '10px' }}>Главная</Link>
-        <Link to="/users">Пользователи</Link>
         <Link to="/tasks" style={{ marginRight: '10px' }}>Задачи</Link> 
+        <Link to="/users">Регистрация</Link>        
         <Link to="/login" style={{ marginLeft: '10px' }}>Вход</Link>
       </nav>
 
